@@ -1,5 +1,6 @@
 package com.evolution.bootcamp.homework.typeclass
 
+import scala.collection.immutable.ArraySeq
 import scala.collection.mutable
 
 object ImplicitsHomework {
