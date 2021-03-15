@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/evolution-scala-bootcamp-homework.iml" filepath="$PROJECT_DIR$/.idea/modules/evolution-scala-bootcamp-homework.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/evolution-scala-bootcamp-homework-build.iml" filepath="$PROJECT_DIR$/.idea/modules/evolution-scala-bootcamp-homework-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scala-bootcamp.iml" filepath="$PROJECT_DIR$/.idea/modules/scala-bootcamp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scala-bootcamp-build.iml" filepath="$PROJECT_DIR$/.idea/modules/scala-bootcamp-build.iml" />
     </modules>
   </component>
 </project>
