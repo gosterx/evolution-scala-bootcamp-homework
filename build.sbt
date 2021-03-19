@@ -78,4 +78,3 @@ libraryDependencies ++= Seq(
 addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.1" cross CrossVersion.full)
 
 run / fork := true
-coverageEnabled := true
