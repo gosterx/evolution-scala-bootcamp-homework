@@ -115,7 +115,7 @@ object ErrorHandling {
         validateSecurityCodeIsNotNumeric andThen validateSecurityCodeLengthError
       }
 
-      private def validate(
+      def create(
                     name: String,
                     number: String,
                     expirationDate: String,
@@ -123,13 +123,7 @@ object ErrorHandling {
                   ): AllErrorsOr[PaymentCard] =
         (validateName(name), validateNumber(number), ExpirationDate.create(expirationDate),validateSecurityCode(securityCode))
           .mapN((name, number, expirationDate, securityCode) => new PaymentCard(name, number, expirationDate, securityCode) {})
-
-      def create(
-                  name: String,
-                  number: String,
-                  expirationDate: String,
-                  securityCode: String,
-                ): AllErrorsOr[PaymentCard] = validate(name, number, expirationDate, securityCode)
+      
     }
   }
 }
