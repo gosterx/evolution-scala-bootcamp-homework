@@ -1,3 +1,4 @@
+
 name := "scala-bootcamp"
 
 version := "0.2"
