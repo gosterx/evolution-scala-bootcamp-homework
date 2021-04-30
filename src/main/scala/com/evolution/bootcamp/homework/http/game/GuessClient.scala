@@ -1,6 +1,7 @@
 package com.evolution.bootcamp.homework.http.game
 
-import cats.effect.IO.ioEffect
+import cats.effect.IO
+import cats.effect.IO.ioConcurrentEffect
 import cats.effect.{ExitCode, IO, IOApp}
 import com.evolution.bootcamp.homework.http.game.domain.attempt.Attempt
 import com.evolution.bootcamp.homework.http.game.domain.game.{GameResult, _}

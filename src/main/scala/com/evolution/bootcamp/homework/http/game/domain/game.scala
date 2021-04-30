@@ -6,6 +6,7 @@ import java.util.UUID
 
 object game {
 
+  @JsonCodec
   sealed trait GameResult
   @JsonCodec
   case class Started(id: UUID) extends GameResult
@@ -18,5 +19,10 @@ object game {
   @JsonCodec
   final case class GameParams(min: Int, max: Int, attempts: Int)
   final case class Game(id: UUID, min: Int, max: Int, number: Int, attempts: Int)
+  object Game {
+    def apply(gameParams: String): Game ={
+
+    }
+  }
 
 }

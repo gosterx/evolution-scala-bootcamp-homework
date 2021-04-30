@@ -17,7 +17,7 @@ val playVersion = "2.8.2"
 val doobieVersion = "0.9.0"
 val catsVersion = "2.2.0"
 val catsTaglessVersion = "0.11"
-val catsEffectVersion = "2.2.0"
+val catsEffectVersion = "2.4.1"
 val epimetheusVersion = "0.4.2"
 
 val akkaVersion = "2.6.9"
@@ -37,6 +37,7 @@ libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
   "org.http4s" %% "http4s-blaze-client" % http4sVersion,
   "org.http4s" %% "http4s-circe" % http4sVersion,
+  "org.http4s" %% "http4s-jdk-http-client" % "0.3.6",
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
   "de.heikoseeberger" %% "akka-http-circe" % akkaHttpCirceVersion,
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,

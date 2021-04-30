@@ -4,7 +4,7 @@ import cats.data.Kleisli
 import cats.effect.concurrent.Ref
 import cats.effect.{ExitCode, IO, IOApp}
 import com.evolution.bootcamp.homework.http.game.domain.game._
-import com.evolution.bootcamp.homework.http.game.routers.Routes.routes
+import com.evolution.bootcamp.homework.http.game.routers.Routes.{routes, socketRoutes}
 import org.http4s.implicits.http4sKleisliResponseSyntaxOptionT
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.{Request, Response}
@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext
 
 object GuessServer extends IOApp{
 
-  def httpApp(ref: Ref[IO, Map[UUID, Game]]): Kleisli[IO, Request[IO], Response[IO]] = routes(ref).orNotFound
+  def httpApp(ref: Ref[IO, Map[UUID, Game]]): Kleisli[IO, Request[IO], Response[IO]] = socketRoutes(ref).orNotFound
 
   override def run(args: List[String]): IO[ExitCode] =
     Ref.of[IO, Map[UUID, Game]](Map.empty).flatMap{ ref =>
