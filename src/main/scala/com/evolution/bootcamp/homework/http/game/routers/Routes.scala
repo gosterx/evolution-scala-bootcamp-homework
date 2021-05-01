@@ -22,16 +22,16 @@ import java.util.UUID
 
 object Routes {
 
-  def routes(ref: Ref[IO, Map[UUID, Game]]): HttpRoutes[IO] = HttpRoutes.of[IO]{
+  def routes(ref: Ref[IO, Map[UUID, Game]]): HttpRoutes[IO] = HttpRoutes.of[IO] {
     case req @ POST -> Root / "start" =>
       (for {
         newGame <- req.as[GameParams]
         min = newGame.min
         max = newGame.max
         attempts = newGame.attempts
-        id      <- GenUUID[IO].random
-        number  <- GenNumber[IO].random(min, max)
-        _       <- ref.update(_ + (id -> Game(id, min, max, number, attempts)))
+        id <- GenUUID[IO].random
+        number <- GenNumber[IO].random(min, max)
+        _ <- ref.update(_ + (id -> Game(id, min, max, number, attempts)))
       } yield id).flatMap(id => Ok(Started(id)))
 
     case req @ POST -> Root / "play" =>
@@ -39,23 +39,23 @@ object Routes {
         attempt <- req.as[Attempt]
         id = attempt.id
         guess = attempt.number
-        gameOption <- modifyRef(ref, id)
+        gameOption <- modifyRefWithAttemptsCount(ref, id)
         response <- gameOption.map { game =>
-              if (game.attempts == 0)         Ok(Defeat)
-              else if (game.number > guess)   Ok(Greater)
-              else if (game.number < guess)   Ok(Lower)
-              else if (game.number == guess)  Ok(Win)
-              else                            Ok(GameNotFound)
+          if (game.attempts == 0) Ok(Defeat)
+          else if (game.number > guess) Ok(Greater)
+          else if (game.number < guess) Ok(Lower)
+          else if (game.number == guess) Ok(Win)
+          else Ok(GameNotFound)
         }.get
       } yield response
   }
 
-  def socketRoutes(ref: Ref[IO, Map[UUID, Game]]): HttpRoutes[IO] = HttpRoutes.of[IO]{
+  def socketRoutes(ref: Ref[IO, Map[UUID, Game]]): HttpRoutes[IO] = HttpRoutes.of[IO] {
 
     case GET -> Root / "wsgame" =>
 
       val receivePipe: Pipe[IO, WebSocketFrame, IO[GameResult]] =
-        _.pull.uncons1.flatMap{
+        _.pull.uncons1.flatMap {
           case Some((startFrame, attemptFrames)) => {
             val started: IO[GameResult] = startFrame match {
               case WebSocketFrame.Text(gameParamsString, _) =>
@@ -75,14 +75,14 @@ object Routes {
                   attempt <- IO.fromEither(decode[Attempt](attemptString))
                   id = attempt.id
                   guess = attempt.number
-                  gameOption <- modifyRef(ref, id)
+                  gameOption <- modifyRefWithAttemptsCount(ref, id)
                   response <- gameOption.map { game =>
                     IO(
-                      if (game.attempts == 0)         Defeat.asInstanceOf[GameResult]
-                      else if (game.number > guess)   Greater.asInstanceOf[GameResult]
-                      else if (game.number < guess)   Lower.asInstanceOf[GameResult]
-                      else if (game.number == guess)  Win.asInstanceOf[GameResult]
-                      else                            GameNotFound.asInstanceOf[GameResult]
+                      if (game.attempts == 0) Defeat.asInstanceOf[GameResult]
+                      else if (game.number > guess) Greater.asInstanceOf[GameResult]
+                      else if (game.number < guess) Lower.asInstanceOf[GameResult]
+                      else if (game.number == guess) Win.asInstanceOf[GameResult]
+                      else GameNotFound.asInstanceOf[GameResult]
                     )
                   }.get
                 } yield response
@@ -104,7 +104,7 @@ object Routes {
       } yield response
   }
 
-  def modifyRef(ref: Ref[IO, Map[UUID, Game]], id: UUID): IO[Option[Game]] =
+  def modifyRefWithAttemptsCount(ref: Ref[IO, Map[UUID, Game]], id: UUID): IO[Option[Game]] =
     ref.modifyMaybe { games =>
       games.get(id).map { game =>
         val updatedGame = game.copy(attempts = game.attempts - 1)
